@@ -42,22 +42,27 @@ def jdih_kemenkeu_crawl(regulation_start, regulation_end, file_path):
         regulations_list = []
         for regulation in regulations:
             regulation_id = regulation['PeraturanId']
+
             regulation_url = 'https://jdih.kemenkeu.go.id/api/AppPeraturans/ByUrl/{}'.format(regulation_id)
             regulation_res = requests.get(regulation_url)
 
-            regulation_dict = regulation_res.json()
-            subjects = regulation_dict['Subyek']
+            try:
+                regulation_dict = regulation_res.json()
+                subjects = regulation_dict['Subyek']
+            except:
+                print("Warning: Found an empty regulation!")
+                continue
 
             if len(subjects) > 0:
                 subject_list = [subject['RefSubjectNames'].strip().title() for subject in subjects]
                 subject_str = ', '.join(subject_list)
 
-                regulation_title = regulation['Judul']
+                regulation_title = regulation['Judul'].strip()
                 regulations_list.append([regulation_title, subject_str])
         
         write_csv_rows(file_path, regulations_list)
         total_new_rows += len(regulations_list)
-        print("Crawled page: {} | New rows: {} | Total new rows: {}".format(page+1, len(regulations_list), total_new_rows))
+        print("Crawled page: {} | New rows: {} | Total new rows: {}".format(1+page//10, len(regulations_list), total_new_rows))
     
     print("JDIH Kemenkeu crawling has been completed!")
 
@@ -76,6 +81,7 @@ if __name__ == '__main__':
     try:
         regulation_start = int(sys.argv[1])
         regulation_end = int(sys.argv[2])
-        jdih_kemenkeu_crawl(regulation_start, regulation_end, file_path)
     except:
         print("Error: Please input starting regulation number and ending regulation number!")
+    else:
+        jdih_kemenkeu_crawl(regulation_start, regulation_end, file_path)
