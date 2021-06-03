@@ -3,6 +3,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 
 jdihn_df = pd.read_csv('data/jdihn_raw.csv')
+jdihn_df['judul_dokumen'] = jdihn_df['judul_dokumen'].apply(lambda x: x.strip().rstrip('.'))
 
 temp_df = jdihn_df[['id', 'judul_dokumen', 'status_id', 'tanggal_penetapan']]
 temp_df['judul_dokumen'] = temp_df['judul_dokumen'].str.lower()
