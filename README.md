@@ -14,3 +14,11 @@ This repository is to get training data for Machine Learning model and prepare d
 ## Data Sources
 - Training data from [JDIH Kemenkeu](https://jdih.kemenkeu.go.id/in/home)
 - Database and prediction data from [JDIHN](https://jdihn.go.id/)
+
+
+## Usage
+```
+python crawl.py <start_page> <end_page>
+python combine_jdihn.py
+python clean_jdihn.py
+```
